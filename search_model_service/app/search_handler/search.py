@@ -10,7 +10,6 @@ from app.lib.constant import (
 )
 
 def search(query):
-
     response = client.invoke_model(
         body=json.dumps({
             "taskType": "SINGLE_EMBEDDING",
@@ -27,11 +26,9 @@ def search(query):
         accept="application/json",
         contentType="application/json"
     )
-
     response_body = json.loads(response["body"].read())
     query_embedding = response_body["embeddings"][0]["embedding"]
 
-    # Query vector DB
     response = s3vector_client.query_vectors(
         vectorBucketName=VECTOR_BUCKET,
         indexName=INDEX_NAME,
@@ -42,30 +39,41 @@ def search(query):
     )
 
     vectors = response["vectors"]
-
-    # Sort by similarity (lower distance = better)
     vectors.sort(key=lambda x: x["distance"])
 
     results = []
+    video_map = {}
 
     for vector in vectors:
         metadata = vector["metadata"]
         distance = vector["distance"]
 
-        result = {
-            "type": metadata.get("type"),
-            "score": distance
-        }
-
         if metadata.get("type") == "image":
-            result["url"] = metadata.get("content")
+            results.append({
+                "type": "image",
+                "url": metadata.get("url"),
+                "score": distance
+            })
 
         elif metadata.get("type") == "video":
-            result["url"] = metadata.get("http_url")
-            result["start_time"] = metadata.get("start_time")
-            result["end_time"] = metadata.get("end_time")
-            result["transcript"] = metadata.get("transcript")
+            url = metadata.get("url")
 
-        results.append(result)
+            if url not in video_map:
+                video_map[url] = {
+                    "type": "video",
+                    "url": url,
+                    "score": distance,
+                    "segments": []
+                }
+
+            video_map[url]["segments"].append({
+                "start_time": metadata.get("start_time"),
+                "end_time": metadata.get("end_time"),
+                "transcript": metadata.get("transcript"),
+                "score": distance
+            })
+
+    results.extend(video_map.values())
+    results.sort(key=lambda x: x["score"])
 
     return results

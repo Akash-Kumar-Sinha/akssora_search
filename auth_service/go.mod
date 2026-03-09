@@ -11,6 +11,7 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/confluentinc/confluent-kafka-go/v2 v2.13.3 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	gorm.io/driver/mysql v1.5.6 // indirect
 )

@@ -3,8 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.content_handler.routes import router as videos_router
 from app.search_handler.search import search
+from contextlib import asynccontextmanager
+from app.workers.consumer import consumer
+import threading
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    thread = threading.Thread(target=consumer, daemon=True)
+    thread.start()
+    print("Kafka consumer started")
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 origins = [
     "http://localhost.8000",
@@ -25,6 +35,6 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/search")
-def search_end(query: str):
-    print(f"Received search query: {query}")
+def search_end(query: str):  # ✅ matches ?query=
+    print(f"Query: {query}")
     return search(query)

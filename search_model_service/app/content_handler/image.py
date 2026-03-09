@@ -61,13 +61,13 @@ def generate_image_embeddings(image_url):
 
     return embedding
 
-def save_embedding_to_vector_db(embedding, image_path):
+def save_embedding_to_vector_db(embedding, image_url):
     vector_record = {
         "key": str(uuid.uuid4()),
         "data": {"float32": embedding},
         "metadata": {
             "type": "image",
-            "url": image_path,
+            "url": image_url,
         }
     }
 
@@ -76,29 +76,9 @@ def save_embedding_to_vector_db(embedding, image_path):
         indexName=INDEX_NAME,
         vectors=[vector_record]
     )
-    print("Saved embedding to vector DB for image:", image_path)
+    print("Saved embedding to vector DB for image:", image_url)
 
 def upload_image(file):
-    try:
-        s3vector_client.create_vector_bucket(
-            vectorBucketName=VECTOR_BUCKET
-        )
-        print(f"Vector bucket '{VECTOR_BUCKET}' created.")
-    except s3vector_client.exceptions.ConflictException:
-        print(f"Vector bucket '{VECTOR_BUCKET}' already exists.")
-    
-    try:
-        s3vector_client.create_index(
-            vectorBucketName=VECTOR_BUCKET,
-            indexName=INDEX_NAME,
-            dataType="float32",
-            dimension=EMBEDDING_DIMENSION,
-            distanceMetric="cosine"
-        )
-        print(f"Index '{INDEX_NAME}' created.")
-    except s3vector_client.exceptions.ConflictException:
-        print(f"Index '{INDEX_NAME}' already exists.")
-
     try:
         file_location = file_name(file)
 
@@ -115,7 +95,6 @@ def upload_image(file):
 
         save_embedding_to_vector_db(embedding, image_url)
 
-        # Clean up the temporary file
         os.remove(file_location)
 
         return image_url

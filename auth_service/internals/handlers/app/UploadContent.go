@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -72,10 +73,10 @@ func UploadContent(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "file processed successfully",
-		"python_response": respBody,
-	})
+	var pythonResp map[string]interface{}
+	json.Unmarshal([]byte(respBody), &pythonResp)
+	println("________________________________________", pythonResp["message"])
+	c.JSON(http.StatusOK, gin.H{"message": pythonResp["message"]})
 }
 
 func sendFileToPython(file multipart.File, filename string, url string) (string, error) {
