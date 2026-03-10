@@ -67,6 +67,7 @@ def transcribe_video(video_path, job_name):
     return transcript_data["results"]["items"]
 
 
+# Items should to be optional
 def extract_transcript_for_segment(items, start_time, end_time):
     words = []
 

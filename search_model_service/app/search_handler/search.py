@@ -73,6 +73,8 @@ def search(query):
                 "score": distance
             })
 
+            video_map[url]["segments"].sort(key=lambda x: x["score"])
+
     results.extend(video_map.values())
     results.sort(key=lambda x: x["score"])
 
