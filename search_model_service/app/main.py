@@ -35,6 +35,5 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/search")
-def search_end(query: str):  # ✅ matches ?query=
-    print(f"Query: {query}")
+def search_end(query: str):
     return search(query)

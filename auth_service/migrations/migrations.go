@@ -12,7 +12,6 @@ func init() {
 }
 
 func main() {
-	// database.DB.Migrator().DropTable(&models.User{}, &models.Profile{})
 
 	if err := database.DB.AutoMigrate(&models.RefreshToken{}); err != nil {
 		log.Printf("Error migrating RefreshToken: %v", err)

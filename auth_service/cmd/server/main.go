@@ -47,10 +47,9 @@ func main() {
 	router.GET("/api/v1", func(c *gin.Context) {
 		c.Redirect(301, "/")
 	})
-	// router.GET("/api/v1/auth", func(c *gin.Context) {
-	// 	c.Redirect(301, "/")
-	// })
+
 	groupapi := router.Group("/api/v1")
+
 	auth := groupapi.Group("/auth")
 	api.AuthRoutes(auth)
 

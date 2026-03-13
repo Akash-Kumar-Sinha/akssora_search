@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background font-sans">
-      <Header />
+      {/* <Header /> */}
       <main className="mx-auto w-full max-w-6xl px-4 pt-32 pb-24 sm:px-6 lg:px-8">
         <Meteors />
         <section className="relative mb-32 text-center">

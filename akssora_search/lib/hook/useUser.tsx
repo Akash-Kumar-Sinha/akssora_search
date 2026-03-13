@@ -30,7 +30,6 @@ const useUser = () => {
           return;
         }
         const data = res.data.profile;
-        console.log("Auth check successful", data);
 
         setUser(data);
       } catch (err) {

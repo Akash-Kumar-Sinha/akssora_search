@@ -5,9 +5,24 @@ import base64
 import uuid
 import requests
 from botocore.exceptions import ClientError
+from concurrent.futures import ThreadPoolExecutor
 
-from app.lib.constant  import MODEL_ID, EMBEDDING_DIMENSION, VECTOR_BUCKET, INDEX_NAME, s3vector_client, s3_client, client, S3_BUCKET
+from app.lib.constant import (
+    MODEL_ID,
+    EMBEDDING_DIMENSION,
+    VECTOR_BUCKET,
+    INDEX_NAME,
+    s3vector_client,
+    s3_client,
+    client,
+    S3_BUCKET,
+    TEXT_INDEX_NAME
+) 
+
+
 from app.lib.file_name import file_name
+
+from app.lib.generate_text_embedding import generate_text_embedding
 
 def upload_image_to_s3(image_path):
     try:
@@ -37,7 +52,45 @@ def upload_image_to_s3(image_path):
         print("Unexpected error:", e)
         return None
 
-def generate_image_embeddings(image_url):
+
+
+def generate_image_description(image_url: str) -> str:
+    """Use Nova Lite to generate a text description of the image."""
+    response = requests.get(image_url)
+    image_bytes = base64.b64encode(response.content).decode("utf-8")
+    result = client.invoke_model(
+        body=json.dumps({
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "image": {
+                                "format": "png",
+                                "source": {"bytes": image_bytes}
+                            }
+                        },
+                        {
+                            "text": "Describe this image in detail — objects, people, setting, colors, actions, composition. Be concise, max 3 sentences."
+                        }
+                    ]
+                }
+            ],
+            "inferenceConfig": {
+                "maxTokens": 200,
+                "temperature": 0.3
+            }
+        }),
+        modelId="amazon.nova-lite-v1:0",
+        accept="application/json",
+        contentType="application/json"
+    )
+    body = json.loads(result["body"].read())
+    return body["output"]["message"]["content"][0]["text"].strip()
+
+
+def generate_image_embeddings(image_url: str):
+    """Generate visual embedding from image."""
     response = requests.get(image_url)
     image_bytes = base64.b64encode(response.content).decode("utf-8")
     request_body = {
@@ -45,10 +98,10 @@ def generate_image_embeddings(image_url):
         "singleEmbeddingParams": {
             "embeddingPurpose": "GENERIC_INDEX",
             "embeddingDimension": EMBEDDING_DIMENSION,
-                "image": {
-                    "format": "png",
-                    "source": {"bytes": image_bytes}
-                },
+            "image": {
+                "format": "png",
+                "source": {"bytes": image_bytes}
+            },
         },
     }
     response = client.invoke_model(
@@ -57,46 +110,62 @@ def generate_image_embeddings(image_url):
         contentType="application/json",
     )
     response_body = json.loads(response["body"].read())
-    embedding = response_body["embeddings"][0]["embedding"]
+    return response_body["embeddings"][0]["embedding"]
 
-    return embedding
 
-def save_embedding_to_vector_db(embedding, image_url):
-    vector_record = {
-        "key": str(uuid.uuid4()),
-        "data": {"float32": embedding},
-        "metadata": {
-            "type": "image",
-            "url": image_url,
-        }
+def save_embedding_to_vector_db(embedding, text_embedding, image_url: str, description: str):
+    image_id = str(uuid.uuid4())
+    shared_metadata = {
+        "type": "image",
+        "url": image_url,
+        "description": description,
+        "image_id": image_id
     }
 
     s3vector_client.put_vectors(
         vectorBucketName=VECTOR_BUCKET,
         indexName=INDEX_NAME,
-        vectors=[vector_record]
+        vectors=[{
+            "key": f"{image_id}#visual",
+            "data": {"float32": embedding},
+            "metadata": {**shared_metadata, "embedding_type": "visual"}
+        }]
     )
-    print("Saved embedding to vector DB for image:", image_url)
+
+    if text_embedding:
+        s3vector_client.put_vectors(
+            vectorBucketName=VECTOR_BUCKET,
+            indexName=TEXT_INDEX_NAME,
+            vectors=[{
+                "key": f"{image_id}#text",
+                "data": {"float32": text_embedding},
+                "metadata": {**shared_metadata, "embedding_type": "text"}
+            }]
+        )
+
 
 def upload_image(file):
     try:
         file_location = file_name(file)
-
         with open(file_location, "wb") as buffer:
             buffer.write(file.file.read())
-        
-        image_url = upload_image_to_s3(file_location)
 
+        image_url = upload_image_to_s3(file_location)
         if image_url is None:
             print("Skipping image due to upload failure:", image_url)
             return
 
-        embedding = generate_image_embeddings(image_url)
+        description = generate_image_description(image_url)
 
-        save_embedding_to_vector_db(embedding, image_url)
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            visual_future = executor.submit(generate_image_embeddings, image_url)
+            text_future = executor.submit(generate_text_embedding, description)
+            visual_embedding = visual_future.result()
+            text_embedding = text_future.result()
+
+        save_embedding_to_vector_db(visual_embedding, text_embedding, image_url, description)
 
         os.remove(file_location)
-
         return image_url
 
     except Exception as e:

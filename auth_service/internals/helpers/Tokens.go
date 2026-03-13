@@ -33,7 +33,7 @@ func GenerateSystemTokens(userID string, email string) (string, string, error) {
 	rtClaims := jwt.RegisteredClaims{
 		Subject:   userID,
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
-		ID:        fmt.Sprintf("%d", time.Now().UnixNano()), // Unique JTI
+		ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
 	}
 	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodRS256, rtClaims).SignedString(signKey)
 

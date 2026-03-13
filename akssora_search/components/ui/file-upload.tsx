@@ -5,12 +5,13 @@ import { motion, AnimatePresence } from "motion/react";
 import { useDropzone, DropzoneOptions } from "react-dropzone";
 import { UploadCloud, File as FileIcon, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import { createPortal } from "react-dom";
 interface FileUploadProps extends DropzoneOptions {
   className?: string;
   value?: File[];
   onChange?: (files: File[]) => void;
   maxFiles?: number;
+  disabled?: boolean;
 }
 
 function FileThumbnail({ file }: { file: File }) {
@@ -46,12 +47,25 @@ export function FileUpload({
   value,
   onChange,
   maxFiles = Infinity,
+  disabled = false,
   ...dropzoneProps
 }: FileUploadProps) {
   const [files, setFiles] = useState<File[]>(value || []);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [prevValue, setPrevValue] = useState<File[] | undefined>(value);
+
+  if (value !== prevValue) {
+    setPrevValue(value);
+    if (value !== undefined) {
+      setFiles(value);
+      if (value.length === 0) {
+        setSelectedFile(null);
+      }
+    }
+  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -142,16 +156,18 @@ export function FileUpload({
         ref={containerRef}
         {...getRootProps()}
         className={cn(
-          "relative flex flex-wrap items-center gap-2 p-2 min-h-20 rounded-4xl border-2 transition-all duration-200 ease-out overflow-hidden",
+          "relative flex flex-wrap items-center gap-2 px-2 min-h-12 rounded-full border-2 transition-all duration-200 ease-out overflow-hidden",
           "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
-          isDragActive
-            ? "border-black"
-            : hasReachedMax
-              ? "border-black/5 cursor-default bg-zinc-50"
-              : "border-black/10 hover:border-black/20 cursor-pointer hover:bg-zinc-50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]",
+          disabled
+            ? "opacity-50 cursor-not-allowed pointer-events-none"
+            : isDragActive
+              ? "border-black"
+              : hasReachedMax
+                ? "border-black/5 cursor-default bg-zinc-50"
+                : "border-black/10 hover:border-black/20 cursor-pointer hover:bg-zinc-50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]",
         )}
       >
-        <input {...getInputProps()} disabled={hasReachedMax} />
+        <input {...getInputProps()} disabled={hasReachedMax || disabled} />
 
         <AnimatePresence mode="popLayout">
           {files.map((file, idx) => (
@@ -296,62 +312,42 @@ export function FileUpload({
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {selectedFile && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/50 backdrop-blur-xl"
-              onClick={() => setSelectedFile(null)}
-            />
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", stiffness: 400, damping: 32 }}
-              className="relative z-10 w-full max-w-2xl bg-white rounded-2xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.18)] flex flex-col"
+      {selectedFile && typeof document !== "undefined" && createPortal(
+        <div
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          onClick={() => setSelectedFile(null)}
+        >
+          <div className="absolute top-4 right-4 z-101">
+            <button
+              className="p-2.5 bg-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 active:scale-95 transition-all border border-white/20"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedFile(null);
+              }}
             >
-              <div className="flex items-center justify-between gap-3 px-4 py-3 bg-white border-b border-zinc-100">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-100 shrink-0">
-                    <FileIcon className="w-3.5 h-3.5 text-zinc-500" />
-                  </div>
-                  <span className="text-sm font-medium text-zinc-700 truncate">
-                    {selectedFile.name}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setSelectedFile(null)}
-                  className="w-7 h-7 flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors shrink-0"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              {/* Media */}
-              <div className="bg-zinc-50 flex items-center justify-center max-h-[70vh] overflow-hidden">
-                {selectedFile.type.startsWith("image/") ? (
-                  <img
-                    src={URL.createObjectURL(selectedFile)}
-                    alt={selectedFile.name}
-                    className="max-w-full max-h-[70vh] object-contain"
-                  />
-                ) : selectedFile.type.startsWith("video/") ? (
-                  <video
-                    src={URL.createObjectURL(selectedFile)}
-                    controls
-                    autoPlay
-                    className="max-w-full max-h-[70vh] w-full"
-                  />
-                ) : null}
-              </div>
-            </motion.div>
+              <X className="w-5 h-5" />
+            </button>
           </div>
-        )}
-      </AnimatePresence>
+          {/* Media */}
+          {selectedFile.type.startsWith("image/") ? (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt={selectedFile.name}
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : selectedFile.type.startsWith("video/") ? (
+            <video
+              src={URL.createObjectURL(selectedFile)}
+              controls
+              autoPlay
+              className="max-w-full max-h-[90vh] w-full rounded-lg shadow-2xl cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : null}
+        </div>,
+        document.body,
+      )}
     </div>
   );
 }

@@ -104,11 +104,9 @@ func findOrCreateUser(userInfo *helpers.GoogleUserInfo) (*models.User, error) {
 
 	err := tx.Preload("Profile").Where("provider = ? AND provider_client_id = ?", "google", userInfo.ID).First(&user).Error
 	if err != nil {
-		// Try to find existing profile by email
 		profileErr := tx.Where("email = ?", userInfo.Email).First(&profile).Error
 
 		if profileErr != nil {
-			// Profile doesn't exist, create a new one
 			addr, err := mail.ParseAddress(userInfo.Email)
 			if err != nil {
 				tx.Rollback()
@@ -140,7 +138,6 @@ func findOrCreateUser(userInfo *helpers.GoogleUserInfo) (*models.User, error) {
 				return nil, fmt.Errorf("failed to create profile: %v", err)
 			}
 		}
-		// If no error, the profile already exists and is loaded into the profile variable
 
 		user = models.User{
 			ProfileID:        profile.ID,

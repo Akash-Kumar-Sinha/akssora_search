@@ -9,7 +9,6 @@ def consumer():
         "auto.offset.reset": "earliest"
     })
     consumer.subscribe(["video-processing"])
-    print("Video worker waiting for jobs...")
 
     try:
         while True:

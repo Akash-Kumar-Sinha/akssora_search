@@ -19,7 +19,6 @@ func AuthSession() gin.HandlerFunc {
 
 		claims, err := helpers.VerifyAccessToken(token)
 		if err != nil {
-			// Frontend should see this and hit /auth/refresh
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "token_expired"})
 			c.Abort()
 			return

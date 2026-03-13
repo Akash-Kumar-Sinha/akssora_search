@@ -14,7 +14,6 @@ import (
 )
 
 func RefreshHandler(c *gin.Context) {
-	print("Refresh token endpoint hit")
 	oldToken, err := c.Cookie("refresh_token")
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "no_refresh_token"})

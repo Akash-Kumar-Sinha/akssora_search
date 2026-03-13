@@ -55,7 +55,6 @@ func UploadContent(c *gin.Context) {
 		return
 	}
 
-	// Open uploaded file
 	file, err := fileHeader.Open()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
