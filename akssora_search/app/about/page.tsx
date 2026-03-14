@@ -13,10 +13,27 @@ import {
   GraduationCap,
   ArrowRight,
 } from "lucide-react";
+import { EMAIL } from "@/lib/constant";
 
-/* ─────────────────────────────────────────────
-   Fade-in wrapper - triggers when element enters viewport
-───────────────────────────────────────────── */
+import { DynamicHeader } from "@/components/ui/dynamic-header";
+import { Login } from "@/components/Login";
+
+const NAV_ITEMS = [
+  {
+    title: "About",
+    href: "/about",
+    image:
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop",
+    description: "Akssora Search",
+  },
+  {
+    title: "Workspace",
+    href: "/workspace",
+    image:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2564&auto=format&fit=crop",
+    description: "Akssora Search",
+  }
+];
 const FadeIn = ({
   children,
   delay = 0,
@@ -138,6 +155,10 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* ── Hero ── */}
+
+      <DynamicHeader nav_items={NAV_ITEMS}>
+        <Login />
+      </DynamicHeader>
       <section className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-center overflow-hidden">
         {/* Glow behind heading */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -357,7 +378,7 @@ const AboutPage = () => {
         <section className="mb-20">
           <FadeIn>
             <p className="text-xs font-mono text-primary tracking-widest uppercase mb-4">
-              Who It's For
+              Who It&apos;s For
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-10 max-w-2xl">
               Built for creators who think in moments.
@@ -389,9 +410,9 @@ const AboutPage = () => {
               Our Mission
             </p>
             <blockquote className="text-2xl sm:text-3xl font-semibold text-foreground max-w-3xl mx-auto leading-snug mb-6">
-              "The value locked inside video content is massively underutilised
-              - not because the content isn't good, but because it's invisible
-              to search."
+              &quot;The value locked inside video content is massively
+              underutilised - not because the content isn&apos;t good, but
+              because it&apos;s invisible to search.&quot;
             </blockquote>
             <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Akssora Search makes every frame, every word, and every moment in
@@ -403,7 +424,6 @@ const AboutPage = () => {
 
         <Divider />
 
-        {/* ── Stack ── */}
         <section className="mb-24">
           <FadeIn>
             <p className="text-xs font-mono text-muted-foreground tracking-widest uppercase mb-6 text-center">
@@ -428,6 +448,16 @@ const AboutPage = () => {
             </div>
           </FadeIn>
         </section>
+
+        <p className="text-center px-4 py-2  text-xs font-mono text-muted-foreground hover:text-foreground  transition-colors duration-200">
+          If you&apos;re interested in implementing Akssora Search for your
+          content library, or want to learn more about how it works under the
+          hood,{" "}
+          <a href={`mailto:${EMAIL}`} className="text-primary hover:underline">
+            get in touch
+          </a>{" "}
+          - we&apos;d love to chat.
+        </p>
       </div>
     </div>
   );

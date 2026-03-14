@@ -2,18 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { DynamicHeader } from "@/components/ui/dynamic-header";
-import { Login } from "@/components/Login";
-
-const NAV_ITEMS = [
-  {
-    title: "About",
-    href: "/about",
-    image:
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop",
-    description: "Akssora Search",
-  },
-];
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,12 +35,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col">
-            <DynamicHeader nav_items={NAV_ITEMS}>
-              <Login />
-            </DynamicHeader>
-            {children}
-          </div>
+          <div className="flex flex-col">{children}</div>
         </ThemeProvider>
       </body>
     </html>

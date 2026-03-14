@@ -11,6 +11,7 @@ export const Login = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleLogin = () => {
+    console.log("Initiating login...", BACKEND_URL);
     window.location.href = `${BACKEND_URL}/auth/oauth/google/login`;
   };
 

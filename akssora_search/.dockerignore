@@ -3,9 +3,9 @@ node_modules/
 .next/
 out/
 
-.env
-.env.*
-!.env_example
+# .env
+# .env.*
+# !.env_example
 
 .git/
 .gitignore

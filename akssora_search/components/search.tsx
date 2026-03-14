@@ -49,20 +49,19 @@ export const Search = ({
   };
   return (
     <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 pt-20 flex items-center gap-3">
+      <div className="flex items-center gap-3 px-4 sm:px-6 py-3">
         <div className="relative flex-1">
-          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             ref={inputRef}
             type="text"
             value={searchQuery}
             placeholder="Search across your media…"
-            className="w-full bg-muted/60 border border-border hover:border-ring/40 focus:border-ring rounded-full pl-11 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors duration-200"
+            className="w-full bg-muted/60 border border-border hover:border-ring/40 focus:border-ring rounded-2xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors duration-200"
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
         </div>
-
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
@@ -76,7 +75,9 @@ export const Search = ({
           ) : (
             <SearchIcon className="w-4 h-4" />
           )}
-          {loading ? "Searching…" : "Search"}
+          <span className="hidden sm:inline">
+            {loading ? "Searching…" : "Search"}
+          </span>
         </motion.button>
       </div>
     </div>

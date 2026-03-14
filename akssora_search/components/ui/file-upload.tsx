@@ -312,42 +312,44 @@ export function FileUpload({
         )}
       </AnimatePresence>
 
-      {selectedFile && typeof document !== "undefined" && createPortal(
-        <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-200"
-          onClick={() => setSelectedFile(null)}
-        >
-          <div className="absolute top-4 right-4 z-101">
-            <button
-              className="p-2.5 bg-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 active:scale-95 transition-all border border-white/20"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedFile(null);
-              }}
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          {/* Media */}
-          {selectedFile.type.startsWith("image/") ? (
-            <img
-              src={URL.createObjectURL(selectedFile)}
-              alt={selectedFile.name}
-              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-default"
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : selectedFile.type.startsWith("video/") ? (
-            <video
-              src={URL.createObjectURL(selectedFile)}
-              controls
-              autoPlay
-              className="max-w-full max-h-[90vh] w-full rounded-lg shadow-2xl cursor-default"
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : null}
-        </div>,
-        document.body,
-      )}
+      {selectedFile &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+            onClick={() => setSelectedFile(null)}
+          >
+            <div className="absolute top-4 right-4 z-101">
+              <button
+                className="p-2.5 bg-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 active:scale-95 transition-all border border-white/20"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedFile(null);
+                }}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            {/* Media */}
+            {selectedFile.type.startsWith("image/") ? (
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt={selectedFile.name}
+                className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-default"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : selectedFile.type.startsWith("video/") ? (
+              <video
+                src={URL.createObjectURL(selectedFile)}
+                controls
+                autoPlay
+                className="max-w-full max-h-[90vh] w-full rounded-lg shadow-2xl cursor-default"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : null}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

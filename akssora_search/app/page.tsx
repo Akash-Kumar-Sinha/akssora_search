@@ -1,7 +1,26 @@
 import Footer from "@/components/Footer";
-import { Header } from "@/components/Header";
 import { Searchbarui } from "@/components/Searchbarui";
 import { Meteors } from "@/components/ui/meteors";
+
+import { DynamicHeader } from "@/components/ui/dynamic-header";
+import { Login } from "@/components/Login";
+
+const NAV_ITEMS = [
+  {
+    title: "About",
+    href: "/about",
+    image:
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop",
+    description: "Akssora Search",
+  },
+  {
+    title: "Workspace",
+    href: "/workspace",
+    image:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2564&auto=format&fit=crop",
+    description: "Akssora Search",
+  }
+];
 
 export default function Home() {
   const useCases = [
@@ -21,7 +40,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background font-sans">
-      {/* <Header /> */}
+      <DynamicHeader nav_items={NAV_ITEMS}>
+        <Login />
+      </DynamicHeader>
       <main className="mx-auto w-full max-w-6xl px-4 pt-32 pb-24 sm:px-6 lg:px-8">
         <Meteors />
         <section className="relative mb-32 text-center">

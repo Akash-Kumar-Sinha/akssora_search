@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/Logo/Logo";
+import useUser from "@/lib/hook/useUser";
 
 interface NavItem {
   title: string;
@@ -29,6 +30,7 @@ export const DynamicHeader = ({
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const { user } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -94,6 +96,7 @@ export const DynamicHeader = ({
           <div className="hidden md:flex items-center gap-1 pl-3">
             {nav_items.map((item, i) => {
               const isHovered = hoveredIndex === i;
+              if (i >0 && !user) return null; 
               return (
                 <div
                   key={item.title}

@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Search as SearchIcon, Loader2, VideoOff } from "lucide-react";
+import { Search as SearchIcon, VideoOff } from "lucide-react";
 import { MediaCard } from "@/components/ui/media-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import api from "@/lib/api";
-import { BACKEND_URL } from "@/lib/constant";
 import { cn } from "@/lib/utils";
 import { Search } from "@/components/search";
+import { Headers } from "@/components/Headers";
 
 type Segment = {
   end_time: number;
@@ -63,7 +62,8 @@ const Workspace = () => {
   const sortedResults = results;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground w-full">
+      <Headers />
       <Search
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -155,7 +155,6 @@ const Workspace = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {/* Result count */}
               <div className="flex items-center justify-between mb-5">
                 <p className="text-xs text-muted-foreground tracking-wide font-mono">
                   {sortedResults.length} result
