@@ -47,16 +47,22 @@ export function SlideButton({
       onMouseLeave={handleMouseLeave}
       style={{ x: springX, y: springY }}
       className={cn(
-        "group w-fit px-8 py-4 flex items-center justify-center cursor-pointer relative overflow-hidden rounded-full border border-black/10 bg-white text-black font-semibold text-sm uppercase tracking-widest",
+        "group w-fit px-8 py-4 flex items-center justify-center relative overflow-hidden rounded-full border border-black/10 bg-white text-black font-semibold text-sm uppercase tracking-widest",
         "transition-shadow hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)]",
+        disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
         className,
       )}
-      onClick={onClick}
-      disabled={disabled}
+      onClick={disabled ? undefined : onClick}
     >
-      <span className="absolute inset-0 bg-black translate-y-[105%] group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] rounded-full" />
+      <span className={cn(
+        "absolute inset-0 bg-black translate-y-[105%] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] rounded-full",
+        !disabled && "group-hover:translate-y-0"
+      )} />
 
-      <motion.span className="relative z-10 transition-colors duration-300 ease-out group-hover:text-white">
+      <motion.span className={cn(
+        "relative z-10 flex items-center gap-2 transition-colors duration-300 ease-out",
+        !disabled && "group-hover:text-white"
+      )}>
         {children}
       </motion.span>
     </motion.button>

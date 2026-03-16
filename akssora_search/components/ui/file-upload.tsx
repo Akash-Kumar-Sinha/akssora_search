@@ -156,7 +156,7 @@ export function FileUpload({
         ref={containerRef}
         {...getRootProps()}
         className={cn(
-          "relative flex flex-wrap items-center gap-2 px-2 min-h-12 rounded-full border-2 transition-all duration-200 ease-out overflow-hidden",
+          "relative flex flex-wrap items-center gap-2 px-2 min-h-10 rounded-full border-2 transition-all duration-200 ease-out overflow-hidden",
           "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
           disabled
             ? "opacity-50 cursor-not-allowed pointer-events-none"

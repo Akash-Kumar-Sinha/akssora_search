@@ -58,9 +58,6 @@ const FadeIn = ({
   );
 };
 
-/* ─────────────────────────────────────────────
-   Feature card
-───────────────────────────────────────────── */
 const FeatureCard = ({
   icon: Icon,
   title,
@@ -85,9 +82,6 @@ const FeatureCard = ({
   </FadeIn>
 );
 
-/* ─────────────────────────────────────────────
-   Audience card
-───────────────────────────────────────────── */
 const AudienceCard = ({
   icon: Icon,
   title,
@@ -114,9 +108,6 @@ const AudienceCard = ({
   </FadeIn>
 );
 
-/* ─────────────────────────────────────────────
-   Step row
-───────────────────────────────────────────── */
 const Step = ({
   number,
   title,
@@ -130,7 +121,7 @@ const Step = ({
 }) => (
   <FadeIn delay={delay} className="flex gap-5">
     <div className="flex-shrink-0 w-10 h-10 rounded-full border border-primary/30 bg-primary/10 flex items-center justify-center">
-      <span className="text-xs font-mono font-bold text-primary">{number}</span>
+      <span className="text-xs  font-bold text-primary">{number}</span>
     </div>
     <div className="pt-1.5">
       <h4 className="text-sm font-semibold text-foreground mb-1">{title}</h4>
@@ -141,16 +132,10 @@ const Step = ({
   </FadeIn>
 );
 
-/* ─────────────────────────────────────────────
-   Divider
-───────────────────────────────────────────── */
 const Divider = () => (
   <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-20" />
 );
 
-/* ─────────────────────────────────────────────
-   Main page
-───────────────────────────────────────────── */
 const AboutPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -169,7 +154,7 @@ const AboutPage = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/10 text-xs font-mono text-primary mb-6"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/10 text-xs  text-primary mb-6"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
           Powered by Amazon Bedrock
@@ -206,7 +191,7 @@ const AboutPage = () => {
         {/* ── Problem ── */}
         <section className="mb-20">
           <FadeIn>
-            <p className="text-xs font-mono text-primary tracking-widest uppercase mb-4">
+            <p className="text-xs  text-primary tracking-widest uppercase mb-4">
               The Problem
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6 max-w-2xl">
@@ -234,7 +219,7 @@ const AboutPage = () => {
         {/* ── How it works ── */}
         <section className="mb-20">
           <FadeIn>
-            <p className="text-xs font-mono text-primary tracking-widest uppercase mb-4">
+            <p className="text-xs  text-primary tracking-widest uppercase mb-4">
               How It Works
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-12 max-w-2xl">
@@ -299,7 +284,7 @@ const AboutPage = () => {
                     <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-background/60 border border-border">
                       <Icon className="w-4 h-4 text-primary flex-shrink-0" />
                       <div>
-                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
+                        <p className="text-[10px]  text-muted-foreground uppercase tracking-wider">
                           {label}
                         </p>
                         <p className="text-xs text-foreground font-medium">
@@ -324,7 +309,7 @@ const AboutPage = () => {
         {/* ── Features ── */}
         <section className="mb-20">
           <FadeIn>
-            <p className="text-xs font-mono text-primary tracking-widest uppercase mb-4">
+            <p className="text-xs  text-primary tracking-widest uppercase mb-4">
               Capabilities
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-10 max-w-2xl">
@@ -377,7 +362,7 @@ const AboutPage = () => {
         {/* ── Audience ── */}
         <section className="mb-20">
           <FadeIn>
-            <p className="text-xs font-mono text-primary tracking-widest uppercase mb-4">
+            <p className="text-xs  text-primary tracking-widest uppercase mb-4">
               Who It&apos;s For
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-10 max-w-2xl">
@@ -406,7 +391,7 @@ const AboutPage = () => {
         {/* ── Mission ── */}
         <section className="mb-20 text-center">
           <FadeIn>
-            <p className="text-xs font-mono text-primary tracking-widest uppercase mb-6">
+            <p className="text-xs  text-primary tracking-widest uppercase mb-6">
               Our Mission
             </p>
             <blockquote className="text-2xl sm:text-3xl font-semibold text-foreground max-w-3xl mx-auto leading-snug mb-6">
@@ -426,7 +411,7 @@ const AboutPage = () => {
 
         <section className="mb-24">
           <FadeIn>
-            <p className="text-xs font-mono text-muted-foreground tracking-widest uppercase mb-6 text-center">
+            <p className="text-xs  text-muted-foreground tracking-widest uppercase mb-6 text-center">
               Built on enterprise-grade infrastructure
             </p>
             <div className="flex flex-wrap justify-center gap-3">
@@ -440,7 +425,7 @@ const AboutPage = () => {
               ].map((tech) => (
                 <span
                   key={tech}
-                  className="px-4 py-2 rounded-full border border-border bg-muted/30 text-xs font-mono text-muted-foreground hover:text-foreground hover:border-ring/40 transition-colors duration-200"
+                  className="px-4 py-2 rounded-full border border-border bg-muted/30 text-xs  text-muted-foreground hover:text-foreground hover:border-ring/40 transition-colors duration-200"
                 >
                   {tech}
                 </span>
@@ -449,7 +434,7 @@ const AboutPage = () => {
           </FadeIn>
         </section>
 
-        <p className="text-center px-4 py-2  text-xs font-mono text-muted-foreground hover:text-foreground  transition-colors duration-200">
+        <p className="text-center px-4 py-2  text-xs  text-muted-foreground hover:text-foreground  transition-colors duration-200">
           If you&apos;re interested in implementing Akssora Search for your
           content library, or want to learn more about how it works under the
           hood,{" "}

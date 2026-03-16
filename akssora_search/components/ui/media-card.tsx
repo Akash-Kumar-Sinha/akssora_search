@@ -315,7 +315,7 @@ export const MediaCard = ({
                     </AnimatePresence>
                   </motion.button>
 
-                  <span className="text-[10px] sm:text-[11px] font-mono tracking-wider text-zinc-400 tabular-nums">
+                  <span className="text-[10px] sm:text-[11px]  tracking-wider text-zinc-400 tabular-nums">
                     {formatTime(currentTime)}
                     <span className="hidden xs:inline">
                       {" "}
@@ -453,7 +453,7 @@ export const MediaCard = ({
                             )}
                             <span
                               className={cn(
-                                "text-[10px] font-mono tracking-wider pt-px shrink-0 tabular-nums",
+                                "text-[10px]  tracking-wider pt-px shrink-0 tabular-nums",
                                 isActive ? "text-zinc-400" : "text-zinc-600",
                               )}
                             >

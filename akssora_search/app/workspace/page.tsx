@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Search } from "@/components/search";
 import { Headers } from "@/components/Headers";
+import Upload from "@/components/upload";
 
 type Segment = {
   end_time: number;
@@ -44,7 +45,7 @@ const ScoreBadge = ({ score }: { score: number }) => {
   return (
     <span
       className={cn(
-        "text-[10px] font-mono font-semibold tracking-wider px-2 py-0.5 rounded-full border",
+        "text-[10px]  font-semibold tracking-wider px-2 py-0.5 rounded-full border",
         color,
       )}
     >
@@ -91,10 +92,13 @@ const Workspace = () => {
                 <p className="text-lg font-semibold text-foreground">
                   Search your media
                 </p>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-sm text-muted-foreground mt-1 mb-8">
                   Type a query above to find relevant moments in your videos and
                   images
                 </p>
+                <div className="max-w-xl mx-auto">
+                  <Upload />
+                </div>
               </div>
             </motion.div>
           )}
@@ -156,7 +160,7 @@ const Workspace = () => {
               exit={{ opacity: 0 }}
             >
               <div className="flex items-center justify-between mb-5">
-                <p className="text-xs text-muted-foreground tracking-wide font-mono">
+                <p className="text-xs text-muted-foreground tracking-wide ">
                   {sortedResults.length} result
                   {sortedResults.length !== 1 ? "s" : ""} for{" "}
                   <span className="text-foreground font-semibold">
@@ -182,7 +186,7 @@ const Workspace = () => {
                       className="flex flex-col gap-2"
                     >
                       <div className="flex items-center justify-between px-1">
-                        <span className="text-[10px] font-mono text-muted-foreground">
+                        <span className="text-[10px]  text-muted-foreground">
                           #{i + 1}
                         </span>
                         <ScoreBadge score={result.score} />

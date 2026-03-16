@@ -4,6 +4,7 @@ import { BACKEND_URL } from "@/lib/constant";
 import { SearchResult } from "@/app/workspace/page";
 import api from "@/lib/api";
 import { Search as SearchIcon, Loader2 } from "lucide-react";
+import { UploadModal } from "./upload-modal";
 
 interface SearchProps {
   searchQuery: string;
@@ -48,7 +49,7 @@ export const Search = ({
     if (e.key === "Enter") handleSearch();
   };
   return (
-    <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+    <div className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-white/5">
       <div className="flex items-center gap-3 px-4 sm:px-6 py-3">
         <div className="relative flex-1">
           <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -57,7 +58,7 @@ export const Search = ({
             type="text"
             value={searchQuery}
             placeholder="Search across your media…"
-            className="w-full bg-muted/60 border border-border hover:border-ring/40 focus:border-ring rounded-2xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors duration-200"
+            className="w-full border border-border hover:border-white/20 focus:border-white/40 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-foreground bg-white/3 placeholder:text-muted-foreground outline-none transition-all duration-200"
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
@@ -68,7 +69,7 @@ export const Search = ({
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           onClick={handleSearch}
           disabled={loading || !searchQuery.trim()}
-          className="flex items-center gap-2 bg-primary text-primary-foreground rounded-full px-5 py-2.5 text-sm font-semibold whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          className="flex items-center gap-2 bg-white text-black hover:bg-zinc-200 rounded-full px-6 py-2.5 text-sm font-bold whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)]"
         >
           {loading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -79,6 +80,8 @@ export const Search = ({
             {loading ? "Searching…" : "Search"}
           </span>
         </motion.button>
+        <div className="hidden sm:block w-px h-8 bg-border mx-2" />
+        <UploadModal />
       </div>
     </div>
   );
